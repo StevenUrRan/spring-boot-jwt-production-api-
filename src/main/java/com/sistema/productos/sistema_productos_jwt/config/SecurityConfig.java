@@ -64,25 +64,34 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Swagger UI — permitir sin autenticación
+
                         .requestMatchers(
-                                "/swagger-ui.html", "/swagger-ui/**",
-                                "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                        // Endpoints públicos
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/webjars/**")
+                        .permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/user", "/login").permitAll()
-                        // Usuarios — solo ADMIN
+
                         .requestMatchers(HttpMethod.GET, "/user", "/user/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/user/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/user/**").hasAuthority("ADMIN")
-                        // Productos
-                        .requestMatchers(HttpMethod.GET, "/product", "/product/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+
+                        .requestMatchers(HttpMethod.GET, "/product", "/product/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .requestMatchers(HttpMethod.POST, "/product").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasAuthority("ROLE_ADMIN")
-                        // Facturas
-                        .requestMatchers(HttpMethod.GET, "/invoice", "/invoice/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasAuthority("ADMIN") // Corrección: quitado
+
+                        .requestMatchers(HttpMethod.GET, "/invoice", "/invoice/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .requestMatchers(HttpMethod.POST, "/invoice").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

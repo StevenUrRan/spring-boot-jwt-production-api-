@@ -25,10 +25,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
-/**
- * Filtro que valida el token JWT en cada petición entrante.
- * Si el token está expirado responde directamente con 401 y un JSON estructurado.
- */
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -93,10 +89,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Escribe una respuesta 401 con cuerpo JSON estructurado directamente en el
-     * HttpServletResponse, cortocircuitando la cadena de filtros.
-     */
     private void writeUnauthorizedResponse(HttpServletResponse response, String error, String code)
             throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -104,5 +96,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
         ErrorResponse errorResponse = new ErrorResponse(error, code);
         objectMapper.writeValue(response.getOutputStream(), errorResponse);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/swagger-ui/") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources");
     }
 }

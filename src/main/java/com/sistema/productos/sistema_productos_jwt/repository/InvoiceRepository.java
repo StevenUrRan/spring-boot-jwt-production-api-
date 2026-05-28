@@ -13,10 +13,6 @@ import com.sistema.productos.sistema_productos_jwt.entity.Invoice;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-    /**
-     * Busca facturas dentro de un rango de fechas usando la fecha embebida en AuthEntity.
-     * Permite filtrar por período, lo que es imprescindible en sistemas de facturación reales.
-     */
     @Query("SELECT i FROM Invoice i WHERE i.auth.createAt BETWEEN :start AND :end ORDER BY i.auth.createAt DESC")
     List<Invoice> findByDateBetween(@Param("start") LocalDateTime start,
                                    @Param("end") LocalDateTime end);
