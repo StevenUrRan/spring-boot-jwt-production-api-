@@ -66,6 +66,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 
                         .requestMatchers(
+                                "/",
+                                "/error",
+                                "/favicon.ico",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
