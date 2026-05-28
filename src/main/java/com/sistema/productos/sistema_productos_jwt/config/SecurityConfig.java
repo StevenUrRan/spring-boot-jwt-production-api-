@@ -68,11 +68,14 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/swagger-resources",
                                 "/swagger-resources/**",
-                                "/webjars/**")
+                                "/webjars/**",
+                                "/configuration/ui",
+                                "/configuration/security")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/user", "/login").permitAll()
@@ -85,7 +88,7 @@ public class SecurityConfig {
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .requestMatchers(HttpMethod.POST, "/product").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasAuthority("ADMIN") // Corrección: quitado
+                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasAuthority("ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/invoice", "/invoice/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")

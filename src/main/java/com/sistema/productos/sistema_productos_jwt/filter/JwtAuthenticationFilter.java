@@ -39,13 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        if (path.contains("swagger") || path.contains("v3/api-docs") || path.contains("swagger-resources")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         logger.info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         logger.info("JWT Authentication Filter - Validando request");
         logger.info("Endpoint: {} {}", request.getMethod(), request.getRequestURI());
@@ -109,7 +102,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         return path.startsWith("/swagger-ui/") ||
+                path.equals("/swagger-ui.html") ||
                 path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-resources");
+                path.equals("/v3/api-docs.yaml") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/webjars/") ||
+                path.equals("/configuration/ui") ||
+                path.equals("/configuration/security");
     }
 }
