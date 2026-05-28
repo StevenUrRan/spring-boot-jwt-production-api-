@@ -36,5 +36,5 @@ public class OpenApiConfig {
                                 .externalDocs(new ExternalDocumentation()
                                                 .description("Repositorio del proyecto")
                                                 .url("https://github.com/stevenurielesrangel/sistema-productos-jwt"));
-        } 
+        }
 }
