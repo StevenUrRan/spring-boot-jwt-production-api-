@@ -39,6 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        if (path.contains("swagger") || path.contains("v3/api-docs") || path.contains("swagger-resources")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         logger.info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         logger.info("JWT Authentication Filter - Validando request");
         logger.info("Endpoint: {} {}", request.getMethod(), request.getRequestURI());
